@@ -1,3 +1,20 @@
+### S3 (manually)
+
+[link](https://aws-practitioner-js-bucket-manual.s3.us-east-1.amazonaws.com/index.html)
+
+### CloudFront (manually)
+
+[link](https://dwtagm5jnseko.cloudfront.net)
+
+### S3 (Automated)
+
+[link](https://shop-react-cloudfront-ivanov.s3.us-east-1.amazonaws.com/index.html)
+
+### CloudFront (Automated)
+
+[link](https://d2dikx70jnxzf3.cloudfront.net)
+
+
 # React-shop-cloudfront
 
 This is frontend starter project for nodejs-aws mentoring program. It uses the following technologies:
