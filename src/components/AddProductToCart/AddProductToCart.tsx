@@ -10,7 +10,7 @@ type AddProductToCartProps = {
   product: Product;
 };
 
-export default function AddProductToCart({ product }: AddProductToCartProps) {
+export default function AddProductToCart({ product }: any) {
   const { data = [], isFetching } = useCart();
   const { mutate: upsertCart } = useUpsertCart();
   const invalidateCart = useInvalidateCart();
