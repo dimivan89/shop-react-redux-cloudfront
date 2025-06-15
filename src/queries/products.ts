@@ -4,6 +4,26 @@ import { AvailableProduct } from "~/models/Product";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import React from "react";
 
+import { Product } from "../models/Product";
+
+const BASE_URL = "https://g2ewm6wfnf.execute-api.us-east-1.amazonaws.com/prod";
+
+export const getProducts = async (): Promise<Product[]> => {
+  const response = await axios.get<Product[]>(`${BASE_URL}/products`);
+  return response.data;
+};
+
+export const getProductById = async (id: string): Promise<Product> => {
+  const response = await axios.get<Product>(`${BASE_URL}/products/${id}`);
+  return response.data;
+};
+
+export const createProduct = async (
+  product: Omit<Product, "id">
+): Promise<void> => {
+  await axios.post(`${BASE_URL}/products`, product);
+};
+
 export function useAvailableProducts() {
   return useQuery<AvailableProduct[], AxiosError>(
     "available-products",

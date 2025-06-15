@@ -9,15 +9,25 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import { formatAsPrice } from "~/utils/utils";
 import {
-  useAvailableProducts,
+  getProducts,
   useDeleteAvailableProduct,
   useInvalidateAvailableProducts,
 } from "~/queries/products";
+import { Product } from "~/models/Product";
+import { useQuery } from "react-query";
 
 export default function ProductsTable() {
-  const { data = [] } = useAvailableProducts();
   const { mutate: deleteAvailableProduct } = useDeleteAvailableProduct();
   const invalidateAvailableProducts = useInvalidateAvailableProducts();
+
+  const { data = [], isLoading } = useQuery<Product[], Error>(
+    "products",
+    getProducts
+  );
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <TableContainer component={Paper}>

@@ -14,6 +14,11 @@ const queryClient = new QueryClient({
   },
 });
 
+const githubLogin = "dimivan89"; // Replace with your GitHub username
+const password = "TEST_PASSWORD";
+const token = btoa(`${githubLogin}:${password}`);
+localStorage.setItem("authorization_token", token);
+
 if (import.meta.env.DEV) {
   const { worker } = await import("./mocks/browser");
   worker.start({ onUnhandledRequest: "bypass" });
