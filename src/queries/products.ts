@@ -5,23 +5,46 @@ import { useQuery, useQueryClient, useMutation } from "react-query";
 import React from "react";
 
 import { Product } from "../models/Product";
+import { getAuthorizationHeader } from "~/utils/auth";
 
 const BASE_URL = "https://g2ewm6wfnf.execute-api.us-east-1.amazonaws.com/prod";
 
 export const getProducts = async (): Promise<Product[]> => {
-  const response = await axios.get<Product[]>(`${BASE_URL}/products`);
+  const authHeader = getAuthorizationHeader();
+  const headers: Record<string, string> = {
+    ...(authHeader.Authorization
+      ? { Authorization: authHeader.Authorization }
+      : {}),
+  };
+  const response = await axios.get<Product[]>(`${BASE_URL}/products`, {
+    headers,
+  });
   return response.data;
 };
 
 export const getProductById = async (id: string): Promise<Product> => {
-  const response = await axios.get<Product>(`${BASE_URL}/products/${id}`);
+  const authHeader = getAuthorizationHeader();
+  const headers: Record<string, string> = {
+    ...(authHeader.Authorization
+      ? { Authorization: authHeader.Authorization }
+      : {}),
+  };
+  const response = await axios.get<Product>(`${BASE_URL}/products/${id}`, {
+    headers,
+  });
   return response.data;
 };
 
 export const createProduct = async (
   product: Omit<Product, "id">
 ): Promise<void> => {
-  await axios.post(`${BASE_URL}/products`, product);
+  const authHeader = getAuthorizationHeader();
+  const headers: Record<string, string> = {
+    ...(authHeader.Authorization
+      ? { Authorization: authHeader.Authorization }
+      : {}),
+  };
+  await axios.post(`${BASE_URL}/products`, product, { headers });
 };
 
 export function useAvailableProducts() {
@@ -67,21 +90,29 @@ export function useRemoveProductCache() {
 }
 
 export function useUpsertAvailableProduct() {
-  return useMutation((values: AvailableProduct) =>
-    axios.put<AvailableProduct>(`${API_PATHS.bff}/product`, values, {
-      headers: {
-        Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
-      },
-    })
-  );
+  return useMutation((values: AvailableProduct) => {
+    const authHeader = getAuthorizationHeader();
+    const headers: Record<string, string> = {
+      ...(authHeader.Authorization
+        ? { Authorization: authHeader.Authorization }
+        : {}),
+    };
+    return axios.put<AvailableProduct>(`${API_PATHS.bff}/product`, values, {
+      headers,
+    });
+  });
 }
 
 export function useDeleteAvailableProduct() {
-  return useMutation((id: string) =>
-    axios.delete(`${API_PATHS.bff}/product/${id}`, {
-      headers: {
-        Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
-      },
-    })
-  );
+  return useMutation((id: string) => {
+    const authHeader = getAuthorizationHeader();
+    const headers: Record<string, string> = {
+      ...(authHeader.Authorization
+        ? { Authorization: authHeader.Authorization }
+        : {}),
+    };
+    return axios.delete(`${API_PATHS.bff}/product/${id}`, {
+      headers,
+    });
+  });
 }

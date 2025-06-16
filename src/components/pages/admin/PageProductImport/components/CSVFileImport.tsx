@@ -1,6 +1,8 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import axios from "axios";
+import { getAuthorizationHeader } from "../../../../../utils/auth"; // adjust path as needed
 
 type CSVFileImportProps = {
   url: string;
@@ -13,8 +15,7 @@ export default function CSVFileImport({ url, title }: CSVFileImportProps) {
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
-      const file = files[0];
-      setFile(file);
+      setFile(files[0]);
     }
   };
 
@@ -23,28 +24,30 @@ export default function CSVFileImport({ url, title }: CSVFileImportProps) {
   };
 
   const uploadFile = async () => {
-    const authorization_token = localStorage.getItem("authorization_token");
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
 
     try {
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          Authorization: `Basic ${authorization_token}`,
-          "Content-Type": "application/json",
-        },
+      const authHeader = getAuthorizationHeader();
+      const headers: Record<string, string> = {
+        "Content-Type": "multipart/form-data",
+        ...(authHeader.Authorization
+          ? { Authorization: authHeader.Authorization }
+          : {}),
+      };
+
+      const response = await axios.post(url, formData, {
+        headers,
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      // Handle the response data as needed
-      console.log(data);
+      console.log("Upload successful:", response.data);
     } catch (error) {
-      console.error("Error fetching imported products:", error);
+      console.error("Upload failed:", error);
     }
   };
+
   return (
     <Box>
       <Typography variant="h6" gutterBottom>

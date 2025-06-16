@@ -7,6 +7,9 @@ import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { theme } from "~/theme";
+import { setAuthorizationToken } from "./utils/auth";
+
+setAuthorizationToken("dimivan89", "TEST_PASSWORD");
 
 const queryClient = new QueryClient({
   defaultOptions: {
